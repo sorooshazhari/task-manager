@@ -6,7 +6,7 @@ The target is to implement a task manager. Multi-Users can Signup / SignIn and m
 My target is to implement server / client by TCP connection and while client works with CLI, server receives command by json-serialized TCP packets
 It's now very simple without any database
 
-Business logics:
+Business logics
 
 Entities: 
     Category:
