@@ -9,31 +9,32 @@ It's now very simple without any database
 Business logics
 
 Entities: 
-    Category:
-        ID
-        Title
-        Progress
+Category:
+ID
+Title
+Progress
 
-        Create()
-        List() // list categories associated to a user
-        Edit()
+Create()
+List() // list categories associated to a user
+Edit()
 
-    Task:
-        ID
-        Title
-        IsDone
-        Category
-        DeadLine
+Task:
+ID
+Title
+IsDone
+Category
+DeadLine
 
-        Create()
-        List() // list tasks associated to a user / categories / date
-        MarkDone()
-        Edit()
+Create()
+List() // list tasks associated to a user / categories / date
+MarkDone()
+Edit()
 
-    User:
-        ID
-        Email
-        Password
+User:
+ID
+Name
+Email
+Password
 
-        SignUp()
-        SignIn()
+SignUp()
+SignIn()
