@@ -34,17 +34,17 @@ func (uStore *UserStorage) CreateNewUser(user entity.User) (entity.User, error) 
 	return newUser, nil
 }
 
-func (uStore *UserStorage) ValidateUser(email, password string) bool {
+func (uStore *UserStorage) ValidateUser(email, password string) int {
 	for _, u := range uStore.users {
 		if u.Email == email {
 			if u.Password == password {
-				return true
+				return u.ID
 			} else {
 				fmt.Println("password is not correct")
-				return false
+				return 0
 			}
 		}
 	}
 	fmt.Println("email is not registered")
-	return false
+	return 0
 }

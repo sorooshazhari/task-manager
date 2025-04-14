@@ -60,17 +60,21 @@ func handleClientRequest(req *deliveryparam.Request) error {
 		if !(passwordOk && emailOk) {
 			return fmt.Errorf("not enough meta data passed")
 		}
-		result := userService.Login(service.ValidateUserRequest{
+		userID := userService.Login(service.ValidateUserRequest{
 			Email:    email,
 			Password: password,
 		})
-		fmt.Printf("result of login is %v\n", result)
+		if userID.ValidatedID == 0 {
+			return fmt.Errorf("login failed!")
+		}
+		validatedUserID = userID.ValidatedID
 	}
 	return nil
 }
 
 var userRepo = repository.NewUserStorage()
 var userService = service.NewUserService(&userRepo)
+var validatedUserID = 0
 
 func main() {
 	listener, lErr := net.Listen(constant.Network, constant.NetAddr)

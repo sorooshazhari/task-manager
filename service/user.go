@@ -7,7 +7,7 @@ import (
 
 type ServiceUserRepo interface {
 	CreateNewUser(entity.User) (entity.User, error)
-	ValidateUser(email string, pass string) bool
+	ValidateUser(email string, pass string) int
 }
 
 type UserService struct {
@@ -34,7 +34,7 @@ type ValidateUserRequest struct {
 }
 
 type ValidateUserResponse struct {
-	IsValidate bool
+	ValidatedID int
 }
 
 func (u UserService) Register(uReq CreateUserRequest) (CreateUserResponse, error) {
@@ -49,9 +49,9 @@ func (u UserService) Register(uReq CreateUserRequest) (CreateUserResponse, error
 	return CreateUserResponse{User: user}, nil
 }
 func (u UserService) Login(vReq ValidateUserRequest) ValidateUserResponse {
-	isOk := u.userRepo.ValidateUser(vReq.Email, vReq.Password)
-	if isOk {
-		return ValidateUserResponse{IsValidate: true}
+	validatedID := u.userRepo.ValidateUser(vReq.Email, vReq.Password)
+	if validatedID != 0 {
+		return ValidateUserResponse{ValidatedID: validatedID}
 	}
-	return ValidateUserResponse{IsValidate: false}
+	return ValidateUserResponse{ValidatedID: validatedID}
 }
