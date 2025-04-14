@@ -7,7 +7,8 @@ import (
 	"os"
 	"task-manager/constant"
 	"task-manager/delivery/deliveryparam"
-	"task-manager/repository"
+	filerepo "task-manager/repository/filestore"
+	memrepo "task-manager/repository/memstore"
 	"task-manager/service"
 )
 
@@ -72,11 +73,17 @@ func handleClientRequest(req *deliveryparam.Request) error {
 	return nil
 }
 
-var userRepo = repository.NewUserStorage()
+var fileRepo = filerepo.NewUserFileStorage("./test.txt")
+var userRepo = memrepo.NewUserStorage(fileRepo)
 var userService = service.NewUserService(&userRepo)
 var validatedUserID = 0
 
 func main() {
+	lErr := userRepo.LoadUsers()
+	if lErr != nil {
+		fmt.Printf("failed to load users initially %v \n", lErr)
+		os.Exit(1)
+	}
 	listener, lErr := net.Listen(constant.Network, constant.NetAddr)
 	if lErr != nil {
 		fmt.Printf("failed to listen address %v \n", lErr)

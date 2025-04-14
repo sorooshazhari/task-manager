@@ -5,14 +5,30 @@ import (
 	"task-manager/entity"
 )
 
-type UserStorage struct {
-	users []entity.User
+type UserPermStore interface {
+	Save(entity.User) error
+	Load() ([]entity.User, error)
 }
 
-func NewUserStorage() UserStorage {
+type UserStorage struct {
+	permStore UserPermStore
+	users     []entity.User
+}
+
+func NewUserStorage(pStore UserPermStore) UserStorage {
 	return UserStorage{
-		users: make([]entity.User, 0),
+		users:     make([]entity.User, 0),
+		permStore: pStore,
 	}
+}
+
+func (uStore *UserStorage) LoadUsers() error {
+	users, lErr := uStore.permStore.Load()
+	if lErr != nil {
+		return lErr
+	}
+	uStore.users = users
+	return nil
 }
 
 func (uStore *UserStorage) CreateNewUser(user entity.User) (entity.User, error) {
@@ -31,6 +47,7 @@ func (uStore *UserStorage) CreateNewUser(user entity.User) (entity.User, error) 
 		ID:       len(uStore.users) + 1,
 	}
 	uStore.users = append(uStore.users, newUser)
+	uStore.permStore.Save(newUser)
 	return newUser, nil
 }
 
